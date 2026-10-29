@@ -92,7 +92,9 @@ Map controls use four visible section buttons: **Route**, **Icons**, **Overlay**
 Overlay contains live opacity, size and zoom previews, a position reset, and
 **Low CPU (1.5s)** position updates. Tools contains minimap calibration and imports.
 **Stop map-only session** is beside the tracking controls at the top. The overlay
-shows a compact status even before map setup; it tells you when a map pack is needed.
+can show a compact status even before map setup; it tells you when a map pack is needed.
+
+**Show overlay** is off by default. Under **Overlay placement**, **Floating** (default) stays on your desktop without requiring Aniimo to be open or focused. **Follow game** moves with the selected game window and hides when you switch away or the game is unavailable. Both modes are click-through until you select **Move overlay**; lock it again when finished. Existing saved visibility preferences are retained. Screenshot recognition still requires visible game content.
 
 **Map & routes → Persistent status bar** (at the top, below the tracking controls) keeps a compact in-game
 status header visible even while idle or paused. It is **off by default**. The master
@@ -156,7 +158,7 @@ Open **Settings → General → Game capture**. **Capture target** defaults to
 **Aniimo window (automatic)**. With one Aniimo game window available, the app
 follows its client area—the game content inside the window borders—as it moves
 or resizes. Screenshots, OCR reading areas and minimap coordinates use that same
-game area. The overlay follows the window and is kept inside it.
+game area. Overlay placement is independent: only **Follow game** follows the window and stays inside it.
 
 Use **Refresh windows** to list the available Aniimo game processes and choose
 an explicit window if more than one is running. If you need monitor capture,

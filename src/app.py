@@ -1689,6 +1689,7 @@ if __name__ == '__main__':
                 from unittest.mock import patch
                 app.tabs.select(1);app.update()
                 with patch('sanctum_panel.app_is_foreground',return_value=True),patch('sanctum_panel.game_is_foreground',return_value=False):
+                    app.sanctum.overlay_enabled.set(True)
                     app.sanctum.opacity.set(45);app.sanctum.overlay_size.set(440)
                     app.sanctum.adjust_overlay();app.update()
                     assert app.sanctum.overlay.visible
@@ -1912,6 +1913,7 @@ if __name__ == '__main__':
                 if not app.ledger.active_start() or 'waiting for map' not in app.overlay_run_status():
                     raise RuntimeError('Unrecognized capture did not start a waiting run')
                 panel=app.sanctum
+                panel.overlay_enabled.set(True)
                 panel.difficulty.set('Chaos');panel.change_difficulty()
                 panel.overlay_size.set(350);panel.map_open=True;panel.map_rescan_pending=True;panel.busy=True
                 panel.map_feedback='Identifying map…';panel.overlay_dirty=True

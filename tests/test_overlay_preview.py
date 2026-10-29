@@ -9,6 +9,7 @@ class OverlayPreviewTests(unittest.TestCase):
         from PIL import Image
         with tempfile.TemporaryDirectory() as directory,patch('sanctum_panel.game_is_foreground',return_value=False):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             app.ledger.configure(capture_target='monitor')
             try:
                 overlay=app.sanctum.overlay
@@ -21,6 +22,7 @@ class OverlayPreviewTests(unittest.TestCase):
     def test_large_overlay_is_kept_inside_a_small_display(self):
         with tempfile.TemporaryDirectory() as directory,patch('sanctum_panel.game_is_foreground',return_value=False):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             app.ledger.configure(capture_target='monitor')
             try:
                 app.sanctum.overlay_size.set(950)
@@ -36,6 +38,7 @@ class OverlayPreviewTests(unittest.TestCase):
     def test_map_only_start_shows_status_in_game_before_map_pack_download(self):
         with tempfile.TemporaryDirectory() as directory,patch('map_setup_panel.maps_ready',return_value=False),patch('sanctum_panel.game_is_foreground',return_value=False):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             app.ledger.configure(capture_target='monitor')
             try:
                 baseline=app.ledger.summary()
@@ -55,6 +58,7 @@ class OverlayPreviewTests(unittest.TestCase):
     def test_map_only_overlay_keeps_map_status_without_ledger_lines(self):
         with tempfile.TemporaryDirectory() as directory,patch('sanctum_panel.game_is_foreground',return_value=False):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             app.ledger.configure(capture_target='monitor')
             try:
                 app.sanctum.watch_action()
@@ -72,6 +76,7 @@ class OverlayPreviewTests(unittest.TestCase):
     def test_adjustments_preview_without_confirming_map_or_changing_run(self):
         with tempfile.TemporaryDirectory() as directory,patch('sanctum_panel.game_is_foreground',return_value=False),patch('sanctum_panel.app_is_foreground',return_value=True):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             app.ledger.configure(capture_target='monitor')
             try:
                 app.tabs.select(1);app.update();panel=app.sanctum

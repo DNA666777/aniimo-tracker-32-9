@@ -18,7 +18,9 @@
 
 **Capture target**: The chosen game window or explicit entire-monitor fallback. Automatic selection requires one unambiguous game window belonging to an Aniimo process; window capture uses the visible client area rather than the desktop's full monitor bounds.
 
-**Client area**: The game content inside its window borders. Window-mode screenshot reading areas, minimap coordinates and overlay placement refer to this area and follow its movement and resizing. Hidden or unavailable game content is not an observation.
+**Client area**: The game content inside its window borders. Window-mode screenshot reading areas, minimap coordinates refer to this area and follow its movement and resizing. Overlay placement follows it only in Follow game mode. Hidden or unavailable game content is not an observation.
+
+**Overlay placement**: Floating (default) is an independent desktop window; Follow game confines it to the selected capture area and requires game focus outside explicit arrangement/preview. The overlay is disabled by default on a fresh installation; saved visibility choices persist. Placement never changes capture or recognition eligibility.
 
 **Party**: Up to three people sharing navigation through one invite code. Membership is independent of each person's run ledger.
 

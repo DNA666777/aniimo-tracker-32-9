@@ -14,6 +14,7 @@ class BackgroundCaptureTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory, patch('sanctum_panel.game_is_foreground',return_value=True), \
                 patch('sanctum_panel.capture_image',side_effect=lambda *args:Image.new('RGB',(640,480))):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             fixture=tk.Tk();fixture.title('Capture focus fixture');fixture.geometry('320x180')
             try:
                 app.ledger.configure(capture_target='monitor')
@@ -60,6 +61,7 @@ class BackgroundCaptureTests(unittest.TestCase):
     def test_result_and_overlay_refresh_leave_the_game_fixture_in_front(self):
         with tempfile.TemporaryDirectory() as directory, patch('sanctum_panel.game_is_foreground',return_value=True):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             fixture=tk.Tk();fixture.title('Capture focus fixture');fixture.geometry('320x180')
             try:
                 app.ledger.configure(capture_target='monitor')

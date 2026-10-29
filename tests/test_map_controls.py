@@ -12,7 +12,7 @@ class MapControlsTests(unittest.TestCase):
             app=App(directory,hotkeys=False)
             try:
                 app.ledger.configure(capture_target='monitor')
-                panel=app.sanctum;panel.always_status.set(True);panel.save_preferences()
+                panel=app.sanctum;panel.overlay_enabled.set(True);panel.always_status.set(True);panel.save_preferences()
                 app.fields['money'].set('500000');panel.tick()
                 shown=' '.join(panel.overlay.canvas.itemcget(i,'text') for i in panel.overlay.canvas.find_all() if panel.overlay.canvas.type(i)=='text')
                 self.assertNotIn('start run',shown)
@@ -36,7 +36,7 @@ class MapControlsTests(unittest.TestCase):
             app=App(directory,hotkeys=False)
             try:
                 app.ledger.configure(capture_target='monitor')
-                panel=app.sanctum;panel.always_status.set(True);panel.save_preferences();panel.tick()
+                panel=app.sanctum;panel.overlay_enabled.set(True);panel.always_status.set(True);panel.save_preferences();panel.tick()
                 shown=' '.join(panel.overlay.canvas.itemcget(i,'text') for i in panel.overlay.canvas.find_all() if panel.overlay.canvas.type(i)=='text')
                 self.assertIn('Ctrl+Shift+F8 start run',shown)
                 self.assertNotIn('F7',shown)

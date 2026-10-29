@@ -8,6 +8,8 @@ class IdleOverlayTests(unittest.TestCase):
     def test_paused_run_says_tracking_is_paused_instead_of_ready_or_waiting(self):
         with tempfile.TemporaryDirectory() as directory, patch('sanctum_panel.game_is_foreground',return_value=True):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
+            app.sanctum.overlay_mode.set('follow_game')
             try:
                 app.ledger.configure(capture_target='monitor')
                 panel=app.sanctum;panel.always_status.set(True)
@@ -32,6 +34,8 @@ class IdleOverlayTests(unittest.TestCase):
         from PIL import Image
         with tempfile.TemporaryDirectory() as directory, patch('sanctum_panel.game_is_foreground', return_value=True):
             app = App(directory, hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
+            app.sanctum.overlay_mode.set('follow_game')
             try:
                 app.ledger.configure(capture_target='monitor')
                 app.begin_run(without_balance=True)
@@ -59,6 +63,8 @@ class IdleOverlayTests(unittest.TestCase):
     def test_optional_idle_bar_stays_between_runs_and_respects_hide_and_focus(self):
         with tempfile.TemporaryDirectory() as directory, patch('sanctum_panel.game_is_foreground', return_value=True):
             app = App(directory, hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
+            app.sanctum.overlay_mode.set('follow_game')
             app.ledger.configure(capture_target='monitor')
             try:
                 panel = app.sanctum

@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Floating (default) and Follow game overlay placement controls. Floating remains independent of game visibility and movement; Follow game retains game-relative placement and focus behavior.
+
+### Changed
+
+- The overlay starts disabled on fresh installations. Saved visibility choices are retained, and disabled overlays also suppress live settings previews.
+
 ## [0.4.2] - 2026-10-22
 
 ### Added

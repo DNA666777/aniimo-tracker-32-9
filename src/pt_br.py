@@ -1,5 +1,9 @@
 """Brazilian Portuguese presentation catalog (English source phrases)."""
 PT_BR=dict(line.split('|',1) for line in r'''
+Overlay placement|Posição da sobreposição
+Floating|Flutuante
+Follow game|Acompanhar jogo
+Floating stays on your desktop. Follow game moves with Aniimo and hides when you switch away.|Flutuante permanece na área de trabalho. Acompanhar jogo segue o Aniimo e oculta ao trocar de janela.
 Ready|Pronto
 Persistent status bar|Barra de status persistente
 Keep run status and shortcut hints visible between runs.|Mostrar o status e os atalhos entre partidas.
@@ -845,7 +849,7 @@ As dificuldades Iniciante e Difícil têm seus próprios mapas. Pesadelo e Caos 
 
 As duas rotas são alternativas independentes: laranja contínuo começa no portal laranja; azul tracejado começa no portal azul. Cada rota procura cumprir a quantidade de salas com chave e/ou ninhos solicitada e terminar na saída mais próxima. Ninhos indicam locais possíveis de ovos. Os ícones de portas, ovos, desafios e baús podem ser mostrados separadamente. Desafios não confirmados ficam ocultos por padrão e aparecem com ? quando habilitados.
 
-Mostrar sobreposição controla a visibilidade sem encerrar a partida. Mover sobreposição permite arrastá-la; Fixar sobreposição devolve os cliques ao jogo. A posição é salva. O marcador VOCÊ fica ciano com uma posição recente e dourado na última posição conhecida. A barra de captura pode ser desativada em Mapa e rotas. A opção Barra de status persistente, no topo de Mapa e rotas, mostra uma barra compacta enquanto Aniimo estiver em primeiro plano, mesmo sem partida ativa. Atalhos podem ser alterados nas Configurações sem reiniciar.
+Mostrar sobreposição controla a visibilidade sem encerrar a partida. Mover sobreposição permite arrastá-la; Fixar sobreposição devolve os cliques ao jogo. A posição é salva. O marcador VOCÊ fica ciano com uma posição recente e dourado na última posição conhecida. A barra de captura pode ser desativada em Mapa e rotas. A opção Barra de status persistente, no topo de Mapa e rotas, mostra uma barra compacta mesmo sem partida ativa. No modo Flutuante, ela permanece na área de trabalho; Acompanhar jogo exige o Aniimo em primeiro plano. Atalhos podem ser alterados nas Configurações sem reiniciar.
 
 CAPTURA E LEITURA DE TEXTO
 

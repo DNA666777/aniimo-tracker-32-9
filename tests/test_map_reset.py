@@ -12,6 +12,7 @@ class MapResetTests(unittest.TestCase):
                 patch('sanctum_panel.capture_bounds',return_value=(100,100,1380,820)), \
                 patch('sanctum_panel.monitors',return_value=[dict(primary=True,bbox=(0,0,1920,1080))]):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
             try:
                 app.ledger.configure(monitor=99,capture_target='auto')
                 app.sanctum.watch_action()

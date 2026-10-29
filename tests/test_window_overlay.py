@@ -11,6 +11,8 @@ class WindowOverlayTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             with patch('sanctum_panel.game_is_foreground',return_value=False):
                 app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
+            app.sanctum.overlay_mode.set('follow_game')
             try:
                 first=dict(target=dict(hwnd=101,pid=201,process=r'c:\games\aniimo.exe',created=500),
                            name='Aniimo A',minimized=False,bbox=(100,100,1380,820))
@@ -40,6 +42,8 @@ class WindowOverlayTests(unittest.TestCase):
     def test_overlay_moves_with_the_game_and_client_minimap_region_survives_resize(self):
         with tempfile.TemporaryDirectory() as directory, patch('sanctum_panel.game_is_foreground', return_value=False):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
+            app.sanctum.overlay_mode.set('follow_game')
             try:
                 app.ledger.configure(capture_target='auto')
                 panel=app.sanctum
@@ -64,6 +68,8 @@ class WindowOverlayTests(unittest.TestCase):
     def test_unavailable_game_hides_overlay_without_falling_back_to_monitor(self):
         with tempfile.TemporaryDirectory() as directory, patch('sanctum_panel.game_is_foreground', return_value=False):
             app=App(directory,hotkeys=False)
+            app.sanctum.overlay_enabled.set(True)
+            app.sanctum.overlay_mode.set('follow_game')
             try:
                 app.ledger.configure(capture_target='auto')
                 panel=app.sanctum

@@ -97,7 +97,9 @@ class SanctumPanel:
         self.automatic_minimap=tk.BooleanVar(value=self.config.get('automatic_minimap',True))
         self.unconfirmed_trials=tk.BooleanVar(value=self.config.get('unconfirmed_trials',False))
         self.next_screen_probe=0
-        self.overlay_enabled=tk.BooleanVar(value=self.config.get('overlay_enabled',True))
+        mode=self.config.get('overlay_mode','floating')
+        self.overlay_mode=tk.StringVar(value=mode if mode in ('floating','follow_game') else 'floating')
+        self.overlay_enabled=tk.BooleanVar(value=self.config.get('overlay_enabled',False))
         self.preview_overlay=tk.BooleanVar(value=False)
         self.last_previewing=False
         self.preview_position_dirty=False
@@ -133,6 +135,11 @@ class SanctumPanel:
         self.move_button=ttk.Button(actions,text='Move overlay',command=self.toggle_move);self.move_button.pack(side='left')
         self.stop_only_button=ttk.Button(actions,text='Stop map-only session',command=self.stop_map_only,style='Card.TButton')
         self.stop_only_button.pack(side='right')
+        placement=ttk.Frame(self.tab);placement.pack(fill='x',pady=(0,12))
+        ttk.Label(placement,text='Overlay placement').pack(side='left',padx=(0,12))
+        for label,mode in (('Floating','floating'),('Follow game','follow_game')):
+            ttk.Radiobutton(placement,text=label,value=mode,variable=self.overlay_mode,command=self.change_overlay_mode).pack(side='left',padx=(0,12))
+        ttk.Label(self.tab,text='Floating stays on your desktop. Follow game moves with Aniimo and hides when you switch away.',wraplength=650,style='Muted.TLabel').pack(anchor='w',pady=(0,12))
         status_options=ttk.Frame(self.tab);status_options.pack(fill='x',pady=(0,12))
         self.persistent_check=ttk.Checkbutton(status_options,text='Persistent status bar',variable=self.always_status,command=self.save_preferences)
         self.persistent_check.pack(side='left',padx=(0,12))
@@ -276,6 +283,14 @@ class SanctumPanel:
         self.config['overlay_position']=list(position)
         self.write_config()
 
+    def change_overlay_mode(self):
+        # Keep the current screen position when changing placement modes.
+        if self.overlay.position is not None:
+            self.config['overlay_position']=list(self.overlay.position)
+        self.capture_frame_bounds=None
+        self.save_preferences()
+        self.tick()
+
     def toggle_overlay(self):
         if not self.overlay_enabled.get():
             self.overlay.set_movable(False)
@@ -318,7 +333,7 @@ class SanctumPanel:
     def save_preferences(self):
         self.config.update(enabled=self.enabled.get(),party=self.party.get(),route_keys=int(self.keys.get()),
             standalone_watch=self.standalone,difficulty=self.difficulty.get(),route_goal=self.route_goal.get(),route_eggs=int(self.egg_count.get()),route_rooms=int(self.route_rooms.get()),route_exit=self.route_exit.get(),legend=self.legend.get(),icons={k:v.get() for k,v in self.icon_vars.items()},
-            overlay_enabled=self.overlay_enabled.get(),opacity=round(self.opacity.get()),overlay_size=round(self.overlay_size.get()),
+            overlay_mode=self.overlay_mode.get(),overlay_enabled=self.overlay_enabled.get(),opacity=round(self.opacity.get()),overlay_size=round(self.overlay_size.get()),
             zoom=self.zoom.get(),follow=self.follow.get(),capture_status=self.capture_status.get(),always_status=self.always_status.get(),unconfirmed_trials=self.unconfirmed_trials.get(),automatic_minimap=self.automatic_minimap.get(),player_trails=self.player_trails.get())
         self.config['position_interval']=1.5 if self.refresh_mode.get()=='Low CPU (1.5s)' else .7
         self.overlay_dirty=True
@@ -631,13 +646,13 @@ class SanctumPanel:
         if self.preview_position_dirty and on_map_tab and app_is_foreground():
             self.paint();self.preview_position_dirty=False
         if not on_map_tab:self.preview_overlay.set(False)
-        previewing=self.assets_ready and self.preview_overlay.get() and on_map_tab and app_is_foreground()
+        previewing=self.overlay_enabled.get() and self.assets_ready and self.preview_overlay.get() and on_map_tab and app_is_foreground()
         if previewing!=self.last_previewing:
             self.last_previewing=previewing;self.overlay_dirty=True
         waiting=self.session.watching and self.session.context_id is not None and not self.session.map_confirmed
         idle_bar=self.always_status.get() and not self.session.watching
         header_only=self.map_open or self.map_rescan_pending or idle_bar
-        show=previewing or (self.overlay_enabled.get() and (arranging or (in_game and (idle_bar or waiting or (self.session.watching and header_only) or (self.session.can_track_minimap and self.engine)))))
+        show=previewing or (self.overlay_enabled.get() and (arranging or ((in_game or self.overlay_mode.get()=='floating') and (idle_bar or waiting or (self.session.watching and header_only) or (self.session.can_track_minimap and self.engine)))))
         if not show:self.overlay.hide()
         elif self.overlay_dirty or not self.overlay.visible:
             self.show_overlay(header_only=header_only and not previewing,preview=previewing)
@@ -651,14 +666,14 @@ class SanctumPanel:
         screen=selected['bbox']
         settings=self.app.ledger.settings()
         target=settings.get('capture_target','auto')
-        if target!='monitor':
+        if self.overlay_mode.get()=='follow_game' and target!='monitor':
             try:screen=self.capture_geometry()
             except ValueError as exc:
                 if not preview:
                     self.overlay.hide();self.status.set(str(exc));return
         size=round(self.overlay_size.get())
         position=self.overlay.position if self.overlay.movable and self.overlay.position else self.config.get('overlay_position',[screen[2]-size-20,screen[1]+70])
-        if target=='monitor' or preview:
+        if self.overlay_mode.get()=='floating' or target=='monitor' or preview:
             screen=next((m['bbox'] for m in screens if m['bbox'][0]<=position[0]<m['bbox'][2] and m['bbox'][1]<=position[1]<m['bbox'][3]),screen)
         size=max(150,min(size,screen[2]-screen[0]-32,screen[3]-screen[1]-100))
         position=[max(screen[0]+12,min(position[0],screen[2]-size-12)),max(screen[1]+12,min(position[1],screen[3]-size-88))]
@@ -709,7 +724,7 @@ class SanctumPanel:
             self.generation+=1
             self.write_config()
         previous=self.capture_frame_bounds
-        if previous and space=='client' and previous!=bounds:
+        if self.overlay_mode.get()=='follow_game' and previous and space=='client' and previous!=bounds:
             delta=(bounds[0]-previous[0],bounds[1]-previous[1])
             if 'overlay_position' in self.config:
                 self.config['overlay_position']=[self.config['overlay_position'][0]+delta[0],self.config['overlay_position'][1]+delta[1]]

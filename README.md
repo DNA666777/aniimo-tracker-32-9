@@ -76,7 +76,7 @@ Update directly from the tracker with **Update & restart**, available in the top
 
 Updates initiated from **0.4.0 onward** can resume the same party within the relay's 60-second reconnect grace. The initial upgrade from an older version requires rejoining once.
 
-Capture follows the Aniimo window's game area as it moves or resizes, and the overlay stays inside it. **Settings → General → Game capture** offers automatic or explicit game-window selection and a manual entire-monitor fallback. Default portal recognition covers tested 720p, 1080p and 4K cases; keep the game visible and recalibrate custom markers after resolution changes when needed. See [capture setup and limits](docs/USER_GUIDE.md#game-window-capture).
+Capture follows the Aniimo window's game area as it moves or resizes, for screenshots and recognition. The overlay is **off by default**; enable **Show overlay** in **Map & routes**. Choose **Floating** (default) for an independent desktop window, or **Follow game** to keep it inside the game area and hide it when switching away. **Settings → General → Game capture** offers automatic or explicit game-window selection and a manual entire-monitor fallback. Default portal recognition covers tested 720p, 1080p and 4K cases; keep the game visible and recalibrate custom markers after resolution changes when needed. See [capture setup and limits](docs/USER_GUIDE.md#game-window-capture).
 
 ### Added in 0.3.1
 

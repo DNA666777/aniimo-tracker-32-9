@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- October 29 map catalog: layouts 31, 33, 38, 61 and 62 join Nightmare/Chaos (12 layouts); Beginner now uses 53–59, with 25 active layouts overall.
+- Download and recognition references for the expanded layouts, including floor renders aligned with their route coordinates. Party relay validation uses the same updated catalog.
 - Floating (default) and Follow game overlay placement controls. Floating remains independent of game visibility and movement; Follow game retains game-relative placement and focus behavior.
 
 ### Changed

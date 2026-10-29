@@ -6,6 +6,12 @@ from sanctum import candidates_from_portals, WatchSession, Detector
 
 
 class SanctumTests(unittest.TestCase):
+    def test_expanded_portal_directions_keep_shared_layouts_ambiguous(self):
+        self.assertEqual(candidates_from_portals((500,500),(200,200)),(31,62))
+        self.assertEqual(candidates_from_portals((500,200),(200,500)),(61,))
+        self.assertEqual(candidates_from_portals((200,500),(500,500)),(32,33))
+
+
     def test_monochrome_custom_markers_remain_recognizable(self):
         with tempfile.TemporaryDirectory() as folder:
             image = Image.new('RGB', (800,600), (35,38,46))
@@ -15,7 +21,7 @@ class SanctumTests(unittest.TestCase):
             draw.rectangle((490,290,510,310), outline=(170,170,170), width=4)
             draw.line((488,300,512,300), fill='white', width=2)
             detector = Detector(folder)
-            detector.calibrate(image, (200,300), (500,300))
+            detector.calibrate(image, (200,300), (500,300),layout=32)
             reading = detector.detect(image)
             self.assertEqual(reading['candidates'], [32])
             self.assertEqual((reading['orange'], reading['blue']), ([200,300], [500,300]))
@@ -73,9 +79,9 @@ class SanctumTests(unittest.TestCase):
 
     def test_west_portals_do_not_guess_between_two_layouts(self):
         self.assertEqual(candidates_from_portals((500,500),(200,500)), (36,40))
-        self.assertEqual(candidates_from_portals((200,500),(500,500)), (32,))
+        self.assertEqual(candidates_from_portals((200,500),(500,500)), (32,33))
         self.assertEqual(candidates_from_portals((500,500),(500,200)), (39,))
-        self.assertEqual(candidates_from_portals((200,500),(500,200)), (35,))
+        self.assertEqual(candidates_from_portals((200,500),(500,200)), (35,38))
 
     def test_watcher_only_runs_between_start_and_end_with_toggle(self):
         session = WatchSession()
@@ -106,7 +112,7 @@ class SanctumTests(unittest.TestCase):
             moved = Image.new('RGB',(900,650),(35,38,46))
             moved.paste(image,(40,20))
             reading = detector.detect(moved)
-            self.assertEqual(reading['candidates'], [32])
+            self.assertEqual(reading['candidates'], [32,33])
             self.assertEqual(reading['orange'], [240,320])
             self.assertEqual(reading['blue'], [540,320])
 

@@ -8,6 +8,15 @@ from party_client import updated_state
 
 
 class PartyTests(unittest.IsolatedAsyncioTestCase):
+    async def test_updated_relay_accepts_each_new_high_tier_layout(self):
+        for layout in (31,33,38,61,62):
+            with self.subTest(layout=layout):
+                host,_=await self.request(dict(type='create',username='Host',difficulty='Chaos'))
+                await host.send(json.dumps(dict(type='update',epoch=1,evidence=dict(layout=layout,confidence=.9))))
+                state=await self.state_where(host,lambda s:s['layout']==layout)
+                self.assertEqual(state['layout'],layout)
+
+
     async def asyncSetUp(self):
         self.relay = Relay()
         self.server = await serve(self.relay.handle, '127.0.0.1', 0)

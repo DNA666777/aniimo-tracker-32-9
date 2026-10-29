@@ -7,10 +7,13 @@ import re
 from urllib.parse import urljoin, urlsplit
 from urllib.request import Request, urlopen
 
-from map_catalog import ALL_LAYOUTS, HIGH_TIER
+from map_catalog import ALL_LAYOUTS
 
 SITE = 'https://aniimotools.dev'
 PAGE = SITE + '/map/lost-sanctum/'
+# These newly active floors use the same image as their route coordinates.
+# MOANIIMO does not yet publish 61/62; mixed crops would misplace the player.
+CATALOG_REFERENCES=(31,33,38,61,62)
 
 
 class DataModule:
@@ -154,7 +157,13 @@ def install_recognition(destination,progress=print):
     destination=Path(destination)
     for layout in ALL_LAYOUTS:
         path=destination/f'map-{layout}.webp'
-        if not path.is_file():save(path,fetch(f'https://aniimo.kr/map/sanctums/sanctum_{layout}.webp'))
+        if path.is_file() and layout not in CATALOG_REFERENCES:continue
+        if layout in CATALOG_REFERENCES:
+            floor=destination/'simulator'/f'assets/lost-sanctum/maps/200{layout}-full.webp'
+            content=floor.read_bytes() if floor.is_file() else fetch(SITE+f'/assets/lost-sanctum/maps/200{layout}-full.webp')
+        else:
+            content=fetch(f'https://aniimo.kr/map/sanctums/sanctum_{layout}.webp')
+        save(path,content)
     outdoor=destination/'outdoor-minimap.webp'
     if not outdoor.is_file():save(outdoor,fetch('https://aniimo.kr/map/egg_heist_team/minimap_ref.webp'))
     progress('Automatic minimap references ready')

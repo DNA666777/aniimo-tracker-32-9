@@ -1772,7 +1772,7 @@ if __name__ == '__main__':
                 draw.rectangle((490,290,510,310),outline='cyan',width=4)
                 draw.line((488,300,512,300),fill='white',width=2)
                 detector = Detector(Path(temp)/'vision-test')
-                detector.calibrate(sample_map,(200,300),(500,300))
+                detector.calibrate(sample_map,(200,300),(500,300),layout=32)
                 vision = detector.detect(sample_map)
                 if vision['candidates'] != [32]:
                     raise RuntimeError('Packaged map image recognition failed')
@@ -1806,12 +1806,13 @@ if __name__ == '__main__':
                     real_checks['automatic_minimap']=True
                     if (folder/'actual-M-map-32.png').exists():
                         horizontal=Detector(Path(temp)/'horizontal-vision').detect(Image.open(folder/'actual-M-map-32.png'))
-                        if horizontal['candidates']!=[32]:
+                        if 32 not in horizontal['candidates'] or any(n not in (32,33) for n in horizontal['candidates']):
                             raise RuntimeError('Horizontal full-map entrances were not recognized')
                         if 'player' in horizontal and not (365<=horizontal['player'][0]<=435 and 505<=horizontal['player'][1]<=565):
                             raise RuntimeError('Horizontal map player matched fog instead of the arrow')
                         json.dumps(horizontal)
-                        real_checks['horizontal_map_layout']=32
+                        real_checks['horizontal_map_candidates']=horizontal['candidates']
+                        real_checks['horizontal_map_layout']=32 if len(horizontal['candidates'])==1 else None
                     if (folder/'actual-M-map-39.png').exists():
                         newer=Detector(Path(temp)/'newer-vision').detect(Image.open(folder/'actual-M-map-39.png'))
                         if newer['candidates']!=[39]:raise RuntimeError('Newer full-map screenshot was not recognized')
@@ -1923,11 +1924,13 @@ if __name__ == '__main__':
                     panel.tick()
                     if not panel.overlay.visible or panel.overlay.window.winfo_height()>65:
                         raise RuntimeError('Open-map header was hidden or too large')
-                    if real_checks.get('horizontal_map_layout')==32:
-                        panel.accept_layout(32,horizontal);panel.map_rescan_pending=False;panel.tick()
+                    if real_checks.get('real_map_layout')==40:
+                        confirmed_layout,confirmed_reading=(32,horizontal) if real_checks.get('horizontal_map_layout')==32 else (40,real)
+                        panel.accept_layout(confirmed_layout,confirmed_reading);panel.map_rescan_pending=False;panel.tick()
                         shown=' '.join(panel.overlay.canvas.itemcget(i,'text') for i in panel.overlay.canvas.find_all() if panel.overlay.canvas.type(i)=='text')
-                        if '32' not in shown or 'Map confirmed' not in shown:
+                        if str(confirmed_layout) not in shown or 'Map confirmed' not in shown:
                             raise RuntimeError('Map confirmation is not visible while M is open')
+                        real_checks['open_map_confirmation']=True
                     real_checks['open_map_header']=True
                 finally:
                     sanctum_panel.game_is_foreground=old_foreground

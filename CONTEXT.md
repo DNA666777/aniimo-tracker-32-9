@@ -70,3 +70,9 @@ Settings uses a section selector with shared save controls rather than another n
 A shared run advances by an explicit member announcement or the next tracked start after completing that shared session. Only the host changes difficulty. Shared epochs distinguish repeated layouts. A local ledger run keeps its original epoch when navigation advances, so late ledger completion cannot reset a newer party map. Optional unfinished-run notices require both a new shared epoch and a confirmed map; map-only sessions never display them.
 
 Historical balance edits replace the original wallet checkpoint amount while preserving its timestamp, progression fields and cutoffs. Newer authoritative wallet observations still win. Editing the latest checkpoint recalculates the wallet from its original cutoffs; drafts and run results are not changed.
+
+## October 29 map catalog
+
+AniimoTools' updated client-data pools contain Beginner 53–59; Hard 41, 42, 45, 48, 49, 50; Nightmare and Chaos 31–40 plus 61, 62. Layout 60 is retained only as a cached historical asset, never selected as an active map. All pools are shared by desktop and relay validation.
+
+Newly active 31, 33, 38, 61 and 62 use the AniimoTools floor render as their recognition reference, with portal coordinates from the same layout data. This avoids nonexistent MOANIIMO 61/62 references and mismatched image crops. Downloaded data and artwork remain outside Git. A full-map portal direction shared by several layouts stays ambiguous unless stronger evidence resolves it.

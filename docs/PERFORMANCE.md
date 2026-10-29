@@ -74,3 +74,5 @@ check, not an overnight leak guarantee. Screen frames are not retained by the
 recognizer; only reference masks, current evidence and coordinates persist.
 The new worker is inactive when tracking is paused or the game loses focus.
 **Tools → Identify from minimap** can be disabled to use M confirmation only.
+
+The recorded map benchmarks above predate the October 29 expansion (7 Chaos / 21 total layouts). The current catalog has 12 Chaos / 25 active layouts; those earlier timings are not measurements of the expanded catalog.

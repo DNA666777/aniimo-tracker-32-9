@@ -58,7 +58,7 @@ class PortalOcclusionTests(unittest.TestCase):
                 with self.subTest(size=size):
                     image=entry_map(covered=False).resize(size,Image.Resampling.LANCZOS)
                     reading=detector.detect(image)
-                    self.assertEqual(reading['candidates'],[32])
+                    self.assertEqual(sorted(reading['candidates']),[32,33])
                     self.assertLessEqual(abs(reading['orange'][0]-600*size[0]/1920),4)
                     self.assertLessEqual(abs(reading['blue'][0]-1200*size[0]/1920),4)
                     self.assertLessEqual(abs(reading['blue'][1]-650*size[1]/1080),4)
@@ -66,7 +66,7 @@ class PortalOcclusionTests(unittest.TestCase):
     def test_stacked_party_numbers_on_both_portals_keep_visible_sides_identifiable(self):
         with tempfile.TemporaryDirectory() as directory:
             reading = Detector(directory).detect(entry_map())
-            self.assertEqual(reading['candidates'], [32])
+            self.assertEqual(sorted(reading['candidates']), [32,33])
             self.assertLess(abs(reading['orange'][0] - 600), 8)
             self.assertLess(abs(reading['blue'][0] - 1200), 8)
             self.assertEqual(reading['orange'][1], 665)

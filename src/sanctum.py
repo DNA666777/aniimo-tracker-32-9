@@ -7,10 +7,10 @@ custom calibration can override them. Map planning uses the local simulator.
 import json
 import math
 from pathlib import Path
-from map_catalog import ALL_LAYOUTS,layouts_for
+from map_catalog import ALL_LAYOUTS,HIGH_TIER,layouts_for
 
-LAYOUTS = (32,34,35,36,37,39,40)
-DIRECTIONS = {'E':(32,), 'S':(34,), 'NE':(35,), 'W':(36,40), 'SE':(37,), 'N':(39,)}
+LAYOUTS = HIGH_TIER
+DIRECTIONS = {'E':(32,33), 'S':(34,), 'NE':(35,38), 'W':(36,40), 'SE':(37,), 'N':(39,), 'NW':(31,62), 'SW':(61,)}
 SITE_URL = 'https://aniimotools.dev/map/lost-sanctum/'
 
 

@@ -94,7 +94,8 @@ class MapOptionsTests(unittest.TestCase):
 
     def test_difficulty_pools_include_every_map_and_share_high_tiers(self):
         from map_catalog import layouts_for
-        self.assertEqual(layouts_for('Beginner'),(53,54,55,56,57,58,59,60))
+        self.assertEqual(layouts_for('Beginner'),(53,54,55,56,57,58,59))
+        self.assertEqual(layouts_for('Chaos'),(31,32,33,34,35,36,37,38,39,40,61,62))
         self.assertEqual(layouts_for('Hard'),(41,42,45,48,49,50))
         self.assertEqual(layouts_for('Nightmare'),layouts_for('Chaos'))
         for difficulty in ('Beginner','Hard','Nightmare','Chaos'):

@@ -58,7 +58,7 @@ These are anonymized tutorial examples. Original player screenshots are not dist
 
 | Track and plan | Navigate and play together |
 | :--- | :--- |
-| Editable runs, failures, paid and free tickets | All 21 layouts across four difficulties |
+| Editable runs, failures, paid and free tickets | All 25 active layouts across four difficulties |
 | Total points, Emperor eggs, tickets and remaining-playtime forecasts | Routes from both entrances; preferred exits |
 | Key, gear and daily ticket break-even budgets | Key doors, eggs, rich rooms or trials |
 | Loot, wallet, points and ticket graphs | Optional room icons, monsters and legend |

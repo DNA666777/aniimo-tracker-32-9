@@ -19,3 +19,15 @@ class MapUpgradeTests(unittest.TestCase):
             self.assertEqual((path/'map-32.webp').read_bytes(),old)
             self.assertEqual((path/'outdoor-minimap.webp').read_bytes(),image.getvalue())
             self.assertTrue(all((path/f'map-{layout}.webp').is_file() for layout in ALL_LAYOUTS))
+
+    def test_expanded_layouts_use_matching_floor_renders_without_moaniimo_references(self):
+        def download(url):
+            if '/sanctum_61.webp' in url or '/sanctum_62.webp' in url:
+                raise AssertionError('These references are not published by MOANIIMO')
+            return b'floor-render' if '/200' in url else b'existing-source'
+        with tempfile.TemporaryDirectory() as folder, patch('setup_maps.fetch', side_effect=download):
+            path=Path(folder)
+            (path/'map-61.webp').write_bytes(b'old-mismatched-crop')
+            install_recognition(path,progress=lambda message:None)
+            for layout in (31,33,38,61,62):
+                self.assertEqual((path/f'map-{layout}.webp').read_bytes(),b'floor-render')

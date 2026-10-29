@@ -88,6 +88,10 @@ its source unless a separate local copy is already installed.
 Settings are grouped into **General**, **Goals & budget**, **Shortcuts**, and
 **Storage & updates**. Map route targets and icon visibility are separate controls.
 
+The October 29 catalog has 25 active layouts: Beginner 53–59 (7), Hard 41/42/45/48/49/50 (6), and Nightmare/Chaos 31–40 plus 61/62 (12). Layout 60 is no longer in the active Beginner pool. After updating the app/source, use **Download map pack** when prompted to install the expanded catalog. Existing run data is unaffected. Upgrade the party relay alongside clients to share the new layouts; older relays reject map IDs outside their catalog.
+
+Some layouts now share nearly the same portal direction (notably 32 and 33). A direction-only reading can remain ambiguous: move through distinctive corridors for minimap confirmation, calibrate a known layout, or select the layout manually. The tracker must not arbitrarily pick the older layout.
+
 Map controls use four visible section buttons: **Route**, **Icons**, **Overlay** and **Tools**.
 Overlay contains live opacity, size and zoom previews, a position reset, and
 **Low CPU (1.5s)** position updates. Tools contains minimap calibration and imports.

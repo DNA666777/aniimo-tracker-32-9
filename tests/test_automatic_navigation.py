@@ -25,7 +25,7 @@ class AutomaticNavigationTests(unittest.TestCase):
             app=App(directory,hotkeys=False)
             try:
                 panel=app.sanctum;panel.watch_action()
-                self.observe(app,entry_map(covered=False),count=1)
+                self.observe(app,entry_map(covered=False,reverse=True),count=1)
                 self.assertTrue(panel.session.map_confirmed)
                 self.observe(app,outdoor_map(),count=1)
                 self.assertTrue(panel.outdoors)
@@ -44,9 +44,9 @@ class AutomaticNavigationTests(unittest.TestCase):
                 panel=app.sanctum;panel.watch_action();panel.automatic_minimap.set(False);panel.save_preferences()
                 self.observe(app,hud(MapEngine(37).reference,(350,600)))
                 self.assertFalse(panel.session.map_confirmed)
-                self.observe(app,entry_map(covered=False),count=1)
+                self.observe(app,entry_map(covered=False,reverse=True),count=1)
                 self.assertTrue(panel.session.map_confirmed)
-                self.assertEqual(panel.engine.layout,32)
+                self.assertEqual(panel.engine.layout,40)
             finally:app.close()
 
     def test_minimap_does_not_replace_a_full_map_but_outdoors_hides_navigation(self):
@@ -55,10 +55,10 @@ class AutomaticNavigationTests(unittest.TestCase):
             try:
                 app.ledger.configure(capture_target='monitor')
                 panel=app.sanctum;panel.watch_action()
-                self.observe(app,entry_map(covered=False),count=1)
-                self.assertEqual(panel.engine.layout,32)
+                self.observe(app,entry_map(covered=False,reverse=True),count=1)
+                self.assertEqual(panel.engine.layout,40)
                 self.observe(app,hud(MapEngine(37).reference,(350,600)))
-                self.assertEqual(panel.engine.layout,32,'M remains authoritative in this dungeon')
+                self.assertEqual(panel.engine.layout,40,'M remains authoritative in this dungeon')
                 self.observe(app,hud(Image.new('RGB',(1024,1024),(65,125,70))))
                 self.assertTrue(panel.outdoors)
                 self.assertIsNone(panel.player)

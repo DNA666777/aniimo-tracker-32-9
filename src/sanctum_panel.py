@@ -613,6 +613,9 @@ class SanctumPanel:
                 continue
             if candidates:
                 self.scan_until = now+5
+                # Both portals on a non-outdoor full map: we are in a dungeon,
+                # even when the layout stays ambiguous (e.g. 32/33).
+                self.outdoors=False;self.outdoor_votes=0
                 chosen = self.manual_layout if self.manual_layout in candidates else candidates[0] if len(candidates)==1 else None
                 if chosen is not None:
                     # Both portals plus a unique layout are sufficient after an M
@@ -622,7 +625,7 @@ class SanctumPanel:
                     self.accept_layout(chosen,reading)
                     self.app.status.set(f'{self.difficulty.get()} layout {chosen} confirmed. Close the game map to show the overlay.')
                 else:
-                    self.map_feedback='Map not identified'
+                    self.map_feedback='Ambiguous layout · '+' / '.join(str(c) for c in candidates)+' · choose it in Map & routes'
                     self.config.update(layout=None,reading={})
                     self.write_config()
                 self.status.set(f"Layout {chosen if chosen else 'choose layout'} · " +

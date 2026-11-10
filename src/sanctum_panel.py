@@ -227,7 +227,7 @@ class SanctumPanel:
         bar=ttk.Frame(workspace,style='Panel.TFrame');bar.pack(fill='x')
         ttk.Label(bar,text='LAYOUT',style='Panel.TLabel',foreground='#9aabc3',font=('Segoe UI Semibold',9)).pack(side='left')
         self.layout_choice=ttk.Combobox(bar,textvariable=self.layout,values=['Auto / waiting']+[str(n) for n in layouts_for(self.difficulty.get())],state='readonly',width=24)
-        self.layout_choice.pack(side='right');self.layout_choice.bind('<<ComboboxSelected>>',lambda e:self.select_layout())
+        self.layout_choice.pack(side='right');self.layout_choice.bind('<<ComboboxSelected>>',lambda e:self.layout_selected())
         ttk.Label(workspace,textvariable=self.status,style='Panel.TLabel',foreground='#79dcc8',wraplength=660).pack(anchor='w',pady=(12,8))
         self.preview=tk.Canvas(workspace,height=380,bg='#101826',highlightthickness=0)
         self.preview.pack(fill='both',expand=True,pady=8);self.preview.bind('<Configure>',lambda e:self.paint())
@@ -911,6 +911,14 @@ class SanctumPanel:
             except Exception as exc:
                 step.set(str(exc))
         ttk.Button(bar,text='Save calibration',command=save).pack(side='left')
+
+    def layout_selected(self):
+        # The i18n mirror can leave self.layout stale after a list pick:
+        # trust what the list shows (layout numbers are never translated).
+        shown=self.layout_choice.get().strip()
+        value='Auto / waiting' if not shown.isdigit() else shown
+        if self.layout.get()!=value:self.layout.set(value)
+        self.select_layout()
 
     def select_layout(self):
         if self.layout.get()=='Auto / waiting':

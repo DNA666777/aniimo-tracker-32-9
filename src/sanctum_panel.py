@@ -927,7 +927,17 @@ class SanctumPanel:
         else:
             self.manual_layout = int(self.layout.get())
             self.config['layout'] = self.manual_layout
+            # A manual choice means the player says they are in this dungeon.
+            # Trust it: otherwise a stale outdoor state or a cleared reading
+            # leaves the overlay hidden and the choice appears to do nothing.
+            self.session.inside_dungeon=True
+            self.outdoors=False;self.outdoor_votes=0
             self.accept_layout(self.manual_layout,self.last_reading)
+            if not self.session.map_confirmed:
+                self.session.confirm_map()
+                self.map_feedback=f'{self.difficulty.get()} {self.manual_layout} · chosen manually'
+                self.config['map_confirmed']=self.session.map_confirmed
+                self.overlay_dirty=True
             if not self.session.map_confirmed:
                 self.status.set(f'Preview layout {self.manual_layout} · not detected. Open the full game map to confirm tracking.')
             if self.last_image is not None and all(k in self.last_reading for k in ('orange','blue')):

@@ -126,14 +126,18 @@ class MinimapRecognizer:
             box=tuple(round(v*s) for v,s in zip(region,(width,height,width,height)))
             return box if 0<=box[0]<box[2]<=width and 0<=box[1]<box[3]<=height else None
         # Search one small, normalized HUD corner rather than all game pixels.
+        # Positions are relative to a 16:9 HUD, which ultrawide screens may
+        # keep at the left edge or center.
+        from sanctum import hud_origins
+        origins,base=hud_origins(width,height)
         scale=min(1,720/height)
-        image=np.asarray(frame.crop((0,0,round(width*.3),round(height*.35))).convert('RGB'))
+        image=np.asarray(frame.crop((0,0,min(width,origins[-1]+round(base*.3)),round(height*.35))).convert('RGB'))
         image=cv2.resize(image,None,fx=scale,fy=scale)
         gray=cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
         circles=cv2.HoughCircles(cv2.GaussianBlur(gray,(5,5),1),cv2.HOUGH_GRADIENT,1.2,30,
             param1=90,param2=26,minRadius=max(20,round(height*scale*.045)),maxRadius=round(height*scale*.15))
         if circles is None:return None
-        x,y,r=min(circles[0],key=lambda p:(p[0]/(width*scale)-.095)**2+(p[1]/(height*scale)-.13)**2)
+        x,y,r=min(circles[0],key=lambda p:min(((p[0]/scale-x0)/base-.095)**2 for x0 in origins)+(p[1]/(height*scale)-.13)**2)
         box=tuple(round(v/scale) for v in (x-r,y-r,x+r,y+r))
         return box if 0<=box[0]<box[2]<=width and 0<=box[1]<box[3]<=height else None
 

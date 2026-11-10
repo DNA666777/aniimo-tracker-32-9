@@ -180,12 +180,15 @@ class MapEngine:
         if not region:
             # Actual Sanctum footage has a circular, north-up minimap at the
             # top left. Scenery/HUD outside its rim must never enter matching.
-            corner=np.asarray(frame.crop((0,0,round(w*.30),round(h*.48))))
+            # On ultrawide screens, measure from the 16:9 HUD origin.
+            from sanctum import hud_origins
+            origins,base=hud_origins(w,h)
+            corner=np.asarray(frame.crop((0,0,min(w,origins[-1]+round(base*.30)),round(h*.48))))
             gray=cv2.cvtColor(corner,cv2.COLOR_RGB2GRAY)
             circles=cv2.HoughCircles(cv2.GaussianBlur(gray,(5,5),1),cv2.HOUGH_GRADIENT,1.2,35,
                 param1=90,param2=26,minRadius=max(28,round(h*.045)),maxRadius=round(h*.15))
             if circles is not None:
-                ranked=sorted(circles[0],key=lambda p:((p[0]/w-.095)**2+(p[1]/h-.13)**2+(p[2]/h-.09)**2))
+                ranked=sorted(circles[0],key=lambda p:(min(((p[0]-x0)/base-.095)**2 for x0 in origins)+(p[1]/h-.13)**2+(p[2]/h-.09)**2))
                 for x,y,r in ranked[:1]:
                     if x-r<0 or y-r<0:continue
                     boxes.append((round(x-r),round(y-r),round(x+r),round(y+r)))

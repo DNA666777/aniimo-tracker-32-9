@@ -14,6 +14,17 @@ DIRECTIONS = {'E':(32,33), 'S':(34,), 'NE':(35,38), 'W':(36,40), 'SE':(37,), 'N'
 SITE_URL = 'https://aniimotools.dev/map/lost-sanctum/'
 
 
+def hud_origins(width, height):
+    """x origin of the 16:9 HUD on screen, with its width.
+
+    On ultrawide screens (21:9, 32:9) Aniimo keeps the HUD anchored to the
+    left edge: measure HUD positions within a 16:9 width from there, not as a
+    fraction of the whole ultrawide width.
+    """
+    base = round(height*16/9)
+    return [0], min(width, base)
+
+
 def candidates_from_portals(orange, blue):
     dx, dy = blue[0]-orange[0], blue[1]-orange[1]
     if math.hypot(dx,dy) < 20:
@@ -100,16 +111,24 @@ class Detector:
         # HUD scales with resolution; map zoom only changes the floor plan.
         normalized=image.convert('RGB').resize((round(image.width*1080/image.height),1080))
         frame=np.asarray(normalized)
-        positions=[]
-        for name,top,bottom in (('plus',280,410),('minus',605,740)):
+        templates={}
+        for name in ('plus','minus'):
             with Image.open(ASSETS/f'map-zoom-{name}.png') as im:
-                template=np.asarray(im.convert('RGB'))
-            crop=frame[top:bottom,round(frame.shape[1]*.02):round(frame.shape[1]*.09)]
-            if crop.shape[1]<template.shape[1]:return False
-            _,score,_,point=cv2.minMaxLoc(cv2.matchTemplate(crop,template,cv2.TM_CCOEFF_NORMED))
-            if score<.88:return False
-            positions.append(point[0])
-        return abs(positions[0]-positions[1])<8
+                templates[name]=np.asarray(im.convert('RGB'))
+        # Zoom controls sit in a band at 2-9% of a 16:9 HUD width. Measure
+        # that band from the HUD origin, not from the full ultrawide width.
+        origins,base=hud_origins(frame.shape[1],frame.shape[0])
+        for x0 in origins:
+            positions=[]
+            for name,top,bottom in (('plus',280,410),('minus',605,740)):
+                template=templates[name]
+                crop=frame[top:bottom,x0+round(base*.01):x0+round(base*.10)]
+                if crop.shape[1]<template.shape[1]:break
+                _,score,_,point=cv2.minMaxLoc(cv2.matchTemplate(crop,template,cv2.TM_CCOEFF_NORMED))
+                if score<.88:break
+                positions.append(point[0])
+            if len(positions)==2 and abs(positions[0]-positions[1])<8:return True
+        return False
 
     def calibrate(self, image, orange, blue, player=None, layout=None):
         import numpy as np
